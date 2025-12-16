@@ -1,7 +1,55 @@
 {
   "users": [
+    {},
     {
-      
+      "id": 1,
+      "login": "alice",
+      "password": "secret"
+    },
+    {
+      "id": 2,
+      "login": "ццц",
+      "password": ""
+    },
+    {
+      "id": 3,
+      "login": "ццц",
+      "password": "wwww"
+    },
+    {
+      "id": 4,
+      "login": "ц",
+      "password": ""
+    },
+    {
+      "id": 5,
+      "login": "a",
+      "password": ""
+    },
+    {
+      "id": 6,
+      "login": "a",
+      "password": "sdjkfhsd"
+    },
+    {
+      "id": 7,
+      "login": "",
+      "password": "sdjkfhsd"
+    },
+    {
+      "id": 8,
+      "login": "ар",
+      "password": ""
+    },
+    {
+      "id": 9,
+      "login": "артур",
+      "password": ""
+    },
+    {
+      "id": 10,
+      "login": "артур",
+      "password": "kjp"
     }
   ]
 }

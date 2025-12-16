@@ -15,16 +15,12 @@ export default function createRouter(db) {
     const { collection } = req.params
     const data = req.body
 
-    if (!data) {
-      return res.status(400).json({ error: "No data provided" })
+    try {
+      const item = await db.create(collection, data)
+      return res.status(201).json({ message: 'Created', data: item })
+    } catch (err) {
+      return res.status(500).json({ error: 'Failed to create item' })
     }
-
-    await db.create(collection, data)
-
-    res.status(201).json({
-      message: "Created",
-      data
-    })
   })
 
   return router

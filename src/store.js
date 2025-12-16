@@ -29,16 +29,21 @@ export default function store(filePath) {
   }
 
   async function create(collection, data) {
-    const db = await read()
+    let db
+    try {
+      db = await read()
+    } catch {
+      db = {}
+    }
 
     db[collection] = db[collection] ?? []
 
-    const id =
-      db[collection].length > 0
-        ? db[collection][db[collection].length - 1].id + 1
-        : 1
+    const nextId = db[collection].reduce((max, it) => {
+      const maybeId = typeof it?.id === "number" ? it.id : 0
+      return Math.max(max, maybeId)
+    }, 0) + 1
 
-    const item = { id, ...data }
+    const item = { id: nextId, ...data }
 
     db[collection].push(item)
     await write(db)

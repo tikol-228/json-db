@@ -1,31 +1,45 @@
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 
 export default function Login() {
   const [login, setLogin] = useState("")
   const [password, setPassword] = useState("")
   const [status, setStatus] = useState("")
+  const timer = useRef(null)
 
-  const handleLogin = async () => {
-    const res = await fetch("/api/users", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        login,
-        password
-      })
-    })
-
-    const json = await res.json()
-
-    if (json.error) {
-      setStatus(json.error)
-    } else {
-      setStatus("User saved to db.json ✅")
-      console.log("Created user:", json.data)
+  useEffect(() => {
+    // don't send when both fields are empty
+    if (!login && !password) {
+      setStatus("")
+      return
     }
-  }
+
+    // debounce to avoid spamming the server while typing
+    setStatus("Saving...")
+    if (timer.current) clearTimeout(timer.current)
+    timer.current = setTimeout(async () => {
+      try {
+        const res = await fetch("/api/users", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ login, password })
+        })
+
+        const json = await res.json()
+        if (json.error) {
+          setStatus(json.error)
+        } else {
+          setStatus("Saved to db.json ✅")
+          console.log("Created/updated user:", json.data)
+        }
+      } catch (err) {
+        setStatus("Network error")
+      }
+    }, 300)
+
+    return () => {
+      if (timer.current) clearTimeout(timer.current)
+    }
+  }, [login, password])
 
   return (
     <div>
@@ -41,10 +55,6 @@ export default function Login() {
         value={password}
         onChange={e => setPassword(e.target.value)}
       />
-
-      <button onClick={handleLogin}>
-        Login
-      </button>
 
       <p>{status}</p>
     </div>
