@@ -35,6 +35,36 @@ export default function Login() {
     }
   };
 
+  const handleDelete = async () => {
+  if (!login) {
+    setStatus("Login is required to delete.");
+    return;
+  }
+
+  setStatus("Deleting...");
+
+  try {
+    const res = await fetch("/api/users", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ login })
+    });
+
+    const json = await res.json();
+
+    if (json.error) {
+      setStatus(json.error);
+    } else {
+      setStatus("Deleted from db.json 🗑️");
+      setLogin("");
+      setPassword("");
+    }
+  } catch {
+    setStatus("Network error");
+  }
+};
+
+
   return (
     <div>
       <h1>Login Form</h1>
@@ -50,6 +80,7 @@ export default function Login() {
         onChange={(e) => setPassword(e.target.value)}
       />
       <button onClick={handleSave}>Save Data</button> {/* Обработчик нажатия */}
+      <button onClick={handleDelete}>delete data</button>
 
       <p>{status}</p>
     </div>

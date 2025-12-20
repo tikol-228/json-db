@@ -1,7 +1,7 @@
 import express from "express"
 import path from "path"
 import { fileURLToPath } from "url"
-import jsonDB from "../../src/index.js"
+import jsonDB from "json-db"   // ✅ ИСПРАВЛЕНО
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -17,10 +17,10 @@ app.use("/api", jsonDB(path.join(__dirname, "db.json")))
 const distDir = path.join(__dirname, "dist")
 app.use(express.static(distDir))
 
-// SPA fallback — serve index.html for all non-API routes without using path-to-regexp
+// SPA fallback
 app.use((req, res, next) => {
-  if (req.path.startsWith('/api')) return next()
-  res.sendFile(path.join(distDir, 'index.html'))
+  if (req.path.startsWith("/api")) return next()
+  res.sendFile(path.join(distDir, "index.html"))
 })
 
 app.listen(8080, () => {
